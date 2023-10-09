@@ -1,12 +1,13 @@
+import os
 from requests.adapters import HTTPAdapter
 import random
 from logging import Logger
-from modulefinder import LOAD_CONST
+# from modulefinder import LOAD_CONST
 from turtle import title
 import urllib.request as req
 from xml.dom.minidom import Identified
-import requests
-from bs4 import BeautifulSoup
+import requests #pip3 install requests
+from bs4 import BeautifulSoup #pip3 install beautifulsoup4
 import sys
 import re
 import string
@@ -21,13 +22,31 @@ ticks = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 #from retry import retry
 
 
-id = 2980
-idend = 2980  # 最後一本的id
+id = 1
+idend = 3530  # 最後一本的id
 end = open("./novel/idend.txt", 'a')
 end.write("\n")
 end.write("endid:")
 end.write(str(idend))
 end.close
+
+
+
+base_folder = './novel'  # 指定基础文件夹路径
+
+# 要创建的子文件夹列表
+subfolders = ['end', 'serialize']
+
+# 循环检查和创建每个子文件夹
+for subfolder in subfolders:
+    folder_path = os.path.join(base_folder, subfolder)  # 构建子文件夹的完整路径
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+        print(f"文件夹 '{folder_path}' 已创建")
+    else:
+        print(f"文件夹 '{folder_path}' 已存在")
+
+
 
 # @retry(stop_max_attempt_number=8, wait_random_min=3, wait_random_max=10)
 
