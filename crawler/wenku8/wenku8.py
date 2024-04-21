@@ -23,16 +23,38 @@ ticks = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
 
 id = 1
-idend = 3530  # 最後一本的id
-end = open("./novel/idend.txt", 'a')
-end.write("\n")
-end.write("endid:")
-end.write(str(idend))
-end.close
+idend = 3638  # 最後一本的id
+
+
+# 取得目前程式碼的路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 設定資料夾名稱和檔案名稱
+folder_name = "novel"
+file_name = "idend.txt"
+
+# 要建立的資料夾的完整路徑
+current_dir = os.path.dirname(os.path.abspath(__file__))
+folder_name = "novel"
+file_name = "idend.txt"
+folder_path = os.path.join(current_dir, folder_name)
+
+# 確認 novel 資料夾是否存在，若不存在則建立
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
+# 要建立的檔案的完整路徑
+file_path = os.path.join(folder_path, file_name)
+
+# 打開檔案進行操作
+with open(file_path, 'a') as end:
+    end.write("\n")
+    end.write("endid:")
+    end.write(str(idend))
 
 
 
-base_folder = './novel'  # 指定基础文件夹路径
+base_folder = folder_path = os.path.join(current_dir, folder_name)  # 指定基础文件夹路径
 
 # 要创建的子文件夹列表
 subfolders = ['end', 'serialize']
@@ -82,11 +104,10 @@ while id <= idend:
         print(bookerror)
         print(id)
         print("\n")
-        error = open("./novel/errorid.txt", 'a')
-        error.write("\n")
-        error.write(str(id))
-        error.close
-        id = id+1
+        with open(file_path, 'a') as error:
+            error.write("\n")
+            error.write(str(id))
+        id = id + 1
         continue
     classmain = soup.find_all("div", class_="main")
     # print(classmain[4])
@@ -135,8 +156,10 @@ while id <= idend:
         with http.request('GET', txt_url, headers=headers, preload_content=False, retries=3) as r:
             #response = request.data.decode('gb18030')
             # print(response)
-            with open("./novel/end/"+str(bookname)+"@"+str(author)+".txt", 'wb') as out_file:
+            file_path = os.path.join(base_folder, 'end', f"{bookname}@{author}.txt")
+            with open(file_path, 'wb') as out_file:
                 shutil.copyfileobj(r, out_file)
+                print(f"文件 '{file_path}' 已创建")     
         # print("1")
     elif status == "连载中":
         #downtxt = requests.get(txt_url,allow_redirects=True)
@@ -147,15 +170,18 @@ while id <= idend:
         #response =response.read().decode('gbk')
         http = urllib3.PoolManager()
         with http.request('GET', txt_url, headers=headers, preload_content=False, retries=3) as r:
-            with open("./novel/serialize/"+str(bookname)+"@"+str(author)+".txt", 'wb') as out_file:
+            file_path = os.path.join(base_folder, 'serialize', f"{bookname}@{author}.txt")
+            with open(file_path, 'wb') as out_file:
                 shutil.copyfileobj(r, out_file)
+                print(f"文件 '{file_path}' 已创建")
         # print("2")
     else:
         print("error1")
 
     id = id+1
 
-end = open("./novel/idend.txt", 'a')
-end.write("endtime:")
-end.write(str(ticks))
-end.close
+
+# 打開檔案進行操作
+with open(file_path, 'a') as end:
+    end.write("endtime:")
+    end.write(str(ticks))
